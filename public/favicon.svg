@@ -1,0 +1,34 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" width="128" height="128">
+  <defs>
+    <radialGradient id="bgGlow" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#1E293B" />
+      <stop offset="100%" stop-color="#0B1120" />
+    </radialGradient>
+    <filter id="cyanGlow" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="3" result="blur" />
+      <feComposite in="SourceGraphic" in2="blur" operator="over" />
+    </filter>
+  </defs>
+
+  <!-- Background Badge -->
+  <circle cx="64" cy="64" r="60" fill="url(#bgGlow)" stroke="#06B6D4" stroke-width="2.5" />
+
+  <!-- Orbit 1 (Horizontal) -->
+  <ellipse cx="64" cy="64" rx="46" ry="18" fill="none" stroke="#06B6D4" stroke-width="2.2" opacity="0.85" />
+  
+  <!-- Orbit 2 (Rotated 60 deg) -->
+  <ellipse cx="64" cy="64" rx="46" ry="18" fill="none" stroke="#7C3AED" stroke-width="2.2" opacity="0.85" transform="rotate(60 64 64)" />
+  
+  <!-- Orbit 3 (Rotated 120 deg) -->
+  <ellipse cx="64" cy="64" rx="46" ry="18" fill="none" stroke="#06B6D4" stroke-width="2.2" opacity="0.85" transform="rotate(120 64 64)" />
+
+  <!-- Electrons on Orbits -->
+  <circle cx="110" cy="64" r="4" fill="#06B6D4" filter="url(#cyanGlow)" />
+  <circle cx="41" cy="24" r="4" fill="#7C3AED" />
+  <circle cx="41" cy="104" r="4" fill="#22D3EE" />
+
+  <!-- Nucleus Glow & Core -->
+  <circle cx="64" cy="64" r="10" fill="#06B6D4" opacity="0.3" filter="url(#cyanGlow)" />
+  <circle cx="64" cy="64" r="6.5" fill="#F8FAFC" />
+  <circle cx="64" cy="64" r="4" fill="#06B6D4" />
+</svg>
