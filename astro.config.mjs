@@ -4,7 +4,7 @@ import sitemap from '@astrojs/sitemap';
 
 // https://astro.build/config
 export default defineConfig({
-  site: 'https://elitescienceclub.org',
+  site: 'https://elitescienceclub.pages.dev',
   integrations: [
     sitemap(),
   ],

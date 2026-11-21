@@ -1,7 +1,7 @@
 ---
 import ShowcaseLayout from '../../layouts/ShowcaseLayout.astro';
 
-const siteUrl = 'https://elitescienceclub.org';
+const siteUrl = 'https://elitescienceclub.pages.dev';
 
 const breadcrumbLd = {
   '@context': 'https://schema.org',
@@ -110,7 +110,8 @@ const projects = [
               <a href={proj.detailHref} class="btn btn-primary" style="margin-top: auto;">
                 View Full Architecture & BOM →
               </a>
-            ) : (\n              <div class="font-mono text-xs text-dim" style="margin-top: auto;">
+            ) : (
+              <div class="font-mono text-xs text-dim" style="margin-top: auto;">
                 🛠️ Hardware documentation coming soon
               </div>
             )}
