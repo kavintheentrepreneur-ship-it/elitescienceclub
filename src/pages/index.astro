@@ -1,0 +1,305 @@
+---
+import ShowcaseLayout from '../layouts/ShowcaseLayout.astro';
+import YouTubeFacade from '../components/YouTubeFacade.astro';
+import { getCollection } from 'astro:content';
+
+const siteUrl = 'https://elitescienceclub.org';
+
+const organizationLd = {
+  '@context': 'https://schema.org',
+  '@type': 'EducationalOrganization',
+  '@id': `${siteUrl}/#organization`,
+  name: 'Elite Science Club',
+  alternateName: 'ESC',
+  slogan: 'Science For Service',
+  url: siteUrl,
+  description: 'A student-led STEM club from Cuddalore, Tamil Nadu, India — producing 4K science explainer Shorts, bilingual technical blogs, and ESP32-S3 AI robotics projects.',
+  address: {
+    '@type': 'PostalAddress',
+    addressLocality: 'Cuddalore',
+    addressRegion: 'Tamil Nadu',
+    addressCountry: 'IN',
+  },
+  sameAs: [
+    'https://www.youtube.com/@EliteScienceClub',
+    'https://www.youtube.com/channel/UCQ2lm5BLi25-irnGiuZclkw',
+  ],
+};
+
+const websiteLd = {
+  '@context': 'https://schema.org',
+  '@type': 'WebSite',
+  '@id': `${siteUrl}/#website`,
+  name: 'Elite Science Club',
+  url: siteUrl,
+  publisher: { '@id': `${siteUrl}/#organization` },
+};
+
+// Dynamically fetch latest English posts
+const allEnPosts = await getCollection('blog-en');
+const latestPosts = allEnPosts
+  .sort((a, b) => b.data.pubDate.getTime() - a.data.pubDate.getTime())
+  .slice(0, 3);
+---
+
+<ShowcaseLayout
+  title="Elite Science Club — Science For Service"
+  description="Student-led STEM club from Cuddalore, Tamil Nadu. 4K science Shorts, bilingual tech blogs, and ESP32-S3 AI robotics — engineered for curiosity."
+  jsonLd={[organizationLd, websiteLd]}
+>
+  <!-- Hero Section -->
+  <section class="hero section">
+    <div class="container" style="text-align: center;">
+      <p class="hero-badge font-mono text-sm text-cyan">🔬 Student-Led STEM Initiative · Cuddalore, Tamil Nadu</p>
+      <h1 class="font-display hero-title">
+        Elite Science Club
+      </h1>
+      <p class="hero-motto font-display text-cyan">Science For Service</p>
+      <p class="hero-desc text-muted" style="max-width: 62ch; margin-inline: auto;">
+        We create 4K 2.5D YouTube Shorts, bilingual technical blogs in English &amp; Tamil,
+        and build real hardware with ESP32-S3 AI robotics — all driven by high-school students
+        who believe science should serve everyone.
+      </p>
+      <div class="flex justify-center flex-wrap gap-md" style="margin-top: 2rem;">
+        <a href="/learn/" class="btn btn-primary">Start Learning Hub</a>
+        <a href="/projects/esp32-s3-ai-robotics/" class="btn btn-outline">
+          🤖 ESP32-S3 Robotics Build
+        </a>
+        <a href="https://www.youtube.com/@EliteScienceClub" target="_blank" rel="noopener noreferrer" class="btn btn-outline">
+          ▶ @EliteScienceClub
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Video & Hardware Spotlights -->
+  <section class="section" style="padding-top: 0;">
+    <div class="container">
+      <div class="grid grid-2" style="align-items: stretch; gap: 2rem;">
+        <!-- Latest Video Spotlight using YouTubeFacade -->
+        <div class="card spotlight-card">
+          <div class="flex items-center justify-between" style="margin-bottom: 0.75rem;">
+            <span class="tag tag-cyan font-mono">Latest 4K Short</span>
+            <span class="font-mono text-xs text-dim">@EliteScienceClub</span>
+          </div>
+
+          <h2 class="font-display text-xl" style="margin-bottom: 0.5rem; color: var(--text-primary);">
+            What Happens If You Put Regular Air in a Jet Tire?
+          </h2>
+          <p class="text-muted text-sm" style="line-height: 1.6; margin-bottom: 1rem;">
+            Watch the 25-second 4K Short explaining moisture freeze-prevention and thermal stability during 260 °C touchdown shocks.
+          </p>
+
+          <div style="margin-bottom: 1rem; border-radius: var(--radius-lg); overflow: hidden;">
+            <YouTubeFacade
+              videoId="A5XYZNz_KFo"
+              title="What Happens If You Put Regular Air in a Jet Tire?"
+              aspect="9:16"
+            />
+          </div>
+
+          <div class="flex flex-wrap gap-sm" style="margin-top: auto; padding-top: 0.75rem; border-top: 1px solid var(--showcase-border);">
+            <a href="/blog/why-airplane-tires-use-nitrogen/" class="btn-link text-cyan">
+              Read Companion Blog (EN) →
+            </a>
+            <a href="/ta/blog/why-airplane-tires-use-nitrogen/" class="btn-link text-violet">
+              தமிழில் வாசிக்க →
+            </a>
+          </div>
+        </div>
+
+        <!-- Featured Robotics Spotlight -->
+        <div class="card spotlight-card">
+          <div class="flex items-center justify-between" style="margin-bottom: 0.75rem;">
+            <span class="tag tag-violet font-mono">Flagship Robotics</span>
+            <span class="font-mono text-xs text-dim">Cuddalore Lab</span>
+          </div>
+
+          <h2 class="font-display text-xl" style="margin-bottom: 0.5rem; color: var(--text-primary);">
+            ESP32-S3 Autonomous AI Edge Rover
+          </h2>
+          <p class="text-muted text-sm" style="line-height: 1.6; margin-bottom: 1rem;">
+            An open-source student-built robotics rover featuring dual-core FreeRTOS task segregation,
+            INT8 quantized computer vision via OV2640, and closed-loop motor telemetry.
+          </p>
+
+          <div class="robotics-features" style="margin-bottom: 1.5rem;">
+            <div class="feature-item flex items-center gap-sm text-sm text-muted">
+              <span class="text-cyan">⚙️</span> <span>Xtensa LX7 Dual-Core 240MHz + Vector Instructions</span>
+            </div>
+            <div class="feature-item flex items-center gap-sm text-sm text-muted">
+              <span class="text-cyan">📷</span> <span>OV2640 Parallel DVP Camera + I2S Digital Mic</span>
+            </div>
+            <div class="feature-item flex items-center gap-sm text-sm text-muted">
+              <span class="text-cyan">⚡</span> <span>DRV8833 PWM Driver + Closed-Loop Encoders</span>
+            </div>
+            <div class="feature-item flex items-center gap-sm text-sm text-muted">
+              <span class="text-cyan">📜</span> <span>100% Open Hardware BOM & Verified Schematics</span>
+            </div>
+          </div>
+
+          <div style="margin-top: auto; padding-top: 0.75rem; border-top: 1px solid var(--showcase-border);">
+            <a href="/projects/esp32-s3-ai-robotics/" class="btn btn-primary" style="width: 100%; justify-content: center;">
+              View Full Architecture & BOM Table →
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Latest Blog Posts Section -->
+  <section class="section">
+    <div class="container">
+      <div class="flex items-center justify-between" style="margin-bottom: 2rem;">
+        <div>
+          <h2 class="font-display text-2xl" style="color: var(--text-primary);">
+            Latest <span class="text-cyan">Technical Articles</span>
+          </h2>
+          <p class="text-muted text-sm">Deep-dive engineering posts paired with our YouTube Shorts.</p>
+        </div>
+        <a href="/blog/" class="btn btn-outline" style="font-size: 0.8rem;">
+          View All Articles →
+        </a>
+      </div>
+
+      <div class="grid grid-3">
+        {latestPosts.map((post) => (
+          <a href={`/blog/${post.id}/`} class="card post-card">
+            <div class="flex items-center gap-sm" style="margin-bottom: 0.75rem;">
+              <span class="tag">{post.data.category}</span>
+              <time datetime={post.data.pubDate.toISOString()} class="font-mono text-xs text-dim">
+                {post.data.pubDate.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' })}
+              </time>
+            </div>
+            <h3 class="font-display text-lg" style="margin-bottom: 0.5rem; color: var(--text-primary);">
+              {post.data.title}
+            </h3>
+            <p class="text-muted text-sm" style="line-height: 1.6;">
+              {post.data.description}
+            </p>
+            <div class="flex items-center justify-between" style="margin-top: 1rem; padding-top: 0.5rem; border-top: 1px solid var(--showcase-border);">
+              <span class="font-mono text-xs text-cyan">Read article →</span>
+              {post.data.translationSlug && (
+                <span class="font-mono text-xs text-violet">தமிழ் உள்ளடக்கமும் உண்டு</span>
+              )}
+            </div>
+          </a>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- Learning Clusters Quick Link -->
+  <section class="section" style="padding-top: 0; padding-bottom: 5rem;">
+    <div class="container">
+      <div class="card" style="padding: 2.5rem; text-align: center; background: linear-gradient(180deg, var(--showcase-bg-card) 0%, var(--showcase-bg-elevated) 100%);">
+        <h2 class="font-display text-2xl" style="margin-bottom: 0.75rem; color: var(--text-primary);">
+          Curated Science & Engineering Learning Tracks
+        </h2>
+        <p class="text-muted text-sm" style="max-width: 58ch; margin-inline: auto; margin-bottom: 1.5rem; line-height: 1.6;">
+          Browse topics across Aviation Physics, Embedded AI &amp; Robotics, and Modern Relativity.
+          Designed to take high-school students from curious viewers to confident builders.
+        </p>
+        <div class="flex justify-center flex-wrap gap-md">
+          <a href="/learn/" class="btn btn-primary">
+            Explore Topic Clusters
+          </a>
+          <a href="/media/" class="btn btn-outline">
+            Browse Media Archive
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+</ShowcaseLayout>
+
+<style>
+  .hero {
+    padding-top: clamp(4rem, 15vh, 7rem);
+    padding-bottom: clamp(2rem, 8vh, 3.5rem);
+  }
+
+  .hero-badge {
+    margin-bottom: 1rem;
+  }
+
+  .hero-title {
+    font-size: clamp(2.5rem, 6vw, 4rem);
+    font-weight: 700;
+    line-height: 1.1;
+    margin-bottom: 0.5rem;
+    background: linear-gradient(135deg, var(--text-primary) 0%, var(--accent-cyan) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .hero-motto {
+    font-size: clamp(1.25rem, 3vw, 1.75rem);
+    font-weight: 600;
+    margin-bottom: 1.5rem;
+    letter-spacing: 0.05em;
+  }
+
+  .hero-desc {
+    font-size: 1.05rem;
+    line-height: 1.7;
+  }
+
+  .spotlight-card {
+    display: flex;
+    flex-direction: column;
+    padding: 2rem;
+  }
+
+  .tag-cyan {
+    border-color: var(--accent-cyan);
+    color: var(--accent-cyan);
+    background: var(--accent-cyan-muted);
+  }
+
+  .tag-violet {
+    border-color: var(--accent-violet);
+    color: var(--accent-violet);
+    background: var(--accent-violet-muted);
+  }
+
+  .robotics-features {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    padding: 1rem;
+    background: var(--showcase-bg-elevated);
+    border-radius: var(--radius);
+    border: 1px solid var(--showcase-border);
+  }
+
+  .btn-link {
+    font-size: 0.85rem;
+    font-weight: 600;
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+
+  .btn-link.text-cyan {
+    color: var(--accent-cyan);
+  }
+
+  .btn-link.text-violet {
+    color: var(--accent-violet-hover);
+  }
+
+  .post-card {
+    display: block;
+    text-decoration: none;
+  }
+
+  .post-card h3 {
+    transition: color var(--transition-fast);
+  }
+
+  .post-card:hover h3 {
+    color: var(--accent-cyan);
+  }
+</style>

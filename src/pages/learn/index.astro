@@ -1,0 +1,286 @@
+---
+import ShowcaseLayout from '../../layouts/ShowcaseLayout.astro';
+
+const siteUrl = 'https://elitescienceclub.org';
+
+const breadcrumbLd = {
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  itemListElement: [
+    { '@type': 'ListItem', position: 1, name: 'Home', item: siteUrl },
+    { '@type': 'ListItem', position: 2, name: 'Learning Hub', item: `${siteUrl}/learn/` },
+  ],
+};
+
+const collectionPageLd = {
+  '@context': 'https://schema.org',
+  '@type': 'CollectionPage',
+  '@id': `${siteUrl}/learn/#collection`,
+  name: 'Elite Science Club Learning Hub',
+  description: 'Topic-clustered STEM knowledge domains: Aviation Physics, Embedded AI & Robotics, and Modern Physics.',
+  url: `${siteUrl}/learn/`,
+  publisher: { '@id': `${siteUrl}/#organization` },
+};
+
+const clusters = [
+  {
+    id: 'aviation-physics',
+    title: 'Aviation Physics & Thermodynamics',
+    badge: 'Fluid Dynamics & Materials',
+    icon: '✈️',
+    description: 'Investigating high-altitude aerodynamics, ideal gas behavior in unpressurized wheel wells, cabin pressurization differentials, and structural fatigue in extreme aeronautical environments.',
+    concepts: [
+      'Moisture condensation and flash-freezing at -55 °C',
+      'Ideal Gas Law (PV = nRT) during 260 °C landing friction shocks',
+      'Bleed-hole differential pressure regulation in multilayer acrylic windows',
+      'Oxidative rubber degradation prevention via diatomic nitrogen (N₂)',
+    ],
+    links: [
+      {
+        title: 'Article (EN): Why Airplane Tires Use Nitrogen',
+        href: '/blog/why-airplane-tires-use-nitrogen/',
+        type: 'Technical Blog',
+      },
+      {
+        title: 'கட்டுரை (தமிழ்): விமான டயர்களில் நைட்ரஜன் ஏன்?',
+        href: '/ta/blog/why-airplane-tires-use-nitrogen/',
+        type: 'Tamil Article',
+      },
+      {
+        title: 'Video Short: 4K 2.5D Nitrogen Physics Explainer',
+        href: '/media/',
+        type: 'YouTube Short',
+      },
+    ],
+  },
+  {
+    id: 'embedded-ai-robotics',
+    title: 'Embedded AI & Hardware Robotics',
+    badge: 'Edge Computing & Mechatronics',
+    icon: '🤖',
+    description: 'Engineering intelligent edge robotics from scratch using dual-core ESP32-S3 microcontrollers, real-time operating systems (FreeRTOS), vector neural network acceleration, and sensor fusion.',
+    concepts: [
+      'Dual-Core Xtensa LX7 architecture: Core 0 (AI) vs Core 1 (Control)',
+      'Quantized INT8 CNN vision inference on microcontrollers',
+      'Digital MEMS acoustic sampling via direct I2S DMA streaming',
+      'Closed-loop quadrature encoder feedback with DRV8833 PWM drivers',
+    ],
+    links: [
+      {
+        title: 'Project Spotlight: ESP32-S3 Edge AI Robotics Platform',
+        href: '/projects/esp32-s3-ai-robotics/',
+        type: 'Hardware Log & BOM',
+      },
+      {
+        title: 'Showcase Hub: All Club Hardware Projects',
+        href: '/projects/',
+        type: 'Project Index',
+      },
+    ],
+  },
+  {
+    id: 'modern-physics',
+    title: 'Modern Physics & Spacetime Dynamics',
+    badge: 'Relativity & Particle Systems',
+    icon: '🌌',
+    description: 'Demystifying the foundational principles of modern physics through high-fidelity visual representations: special relativity, relativistic momentum, and Lorentz transformations.',
+    concepts: [
+      'Einstein’s postulates: Invariance of the speed of light (c)',
+      'Geometric derivation of the Lorentz factor γ = 1/√(1 - v²/c²)',
+      'Light clocks and reference frame time dilation',
+      'Spacetime Minkowski diagrams and relativistic causality',
+    ],
+    links: [
+      {
+        title: 'Media Archive: Special Relativity Visual Explainer',
+        href: '/media/',
+        type: '16:9 3D Explainer',
+      },
+      {
+        title: 'Explore All Video Explainers',
+        href: '/media/',
+        type: 'Media Hub',
+      },
+    ],
+  },
+];
+
+const itemListLd = {
+  '@context': 'https://schema.org',
+  '@type': 'ItemList',
+  name: 'STEM Knowledge Clusters',
+  itemListElement: clusters.map((c, i) => ({
+    '@type': 'ListItem',
+    position: i + 1,
+    name: c.title,
+    description: c.description,
+  })),
+};
+---
+
+<ShowcaseLayout
+  title="Science & Engineering Hub — Elite Science Club"
+  description="Topic-clustered STEM knowledge index: Aviation Physics, Embedded AI & Robotics, and Modern Physics. Connecting visual shorts to deep technical articles."
+  jsonLd={[breadcrumbLd, collectionPageLd, itemListLd]}
+>
+  <!-- Breadcrumb -->
+  <nav class="container" style="padding-top: 1.5rem;" aria-label="Breadcrumb">
+    <ol class="breadcrumb flex items-center gap-sm font-mono text-sm">
+      <li><a href="/" class="text-muted breadcrumb-link">Home</a></li>
+      <li class="text-dim" aria-hidden="true">/</li>
+      <li class="text-cyan" aria-current="page">Learning Hub</li>
+    </ol>
+  </nav>
+
+  <!-- Hero -->
+  <section class="section" style="padding-bottom: 2rem;">
+    <div class="container" style="text-align: center;">
+      <p class="font-mono text-sm text-cyan" style="margin-bottom: 0.75rem;">📚 Topic-Clustered Engineering Index</p>
+      <h1 class="font-display" style="font-size: clamp(2rem, 5vw, 3rem); margin-bottom: 1rem;">
+        Science & Engineering <span class="text-cyan">Hub</span>
+      </h1>
+      <p class="text-muted" style="max-width: 60ch; margin-inline: auto; font-size: 1.05rem; line-height: 1.7;">
+        Explore curated knowledge clusters that unify 4K YouTube Shorts, bilingual research blogs,
+        and student-built robotics schematics into clear learning tracks.
+      </p>
+    </div>
+  </section>
+
+  <!-- Clusters -->
+  <section class="section" style="padding-top: 0;">
+    <div class="container">
+      <div class="clusters-container">
+        {clusters.map((cluster) => (
+          <article class="card cluster-card" id={cluster.id}>
+            <div class="cluster-header">
+              <div class="cluster-icon" aria-hidden="true">{cluster.icon}</div>
+              <div>
+                <span class="tag tag-cyan font-mono" style="margin-bottom: 0.5rem;">{cluster.badge}</span>
+                <h2 class="font-display text-2xl" style="color: var(--text-primary); margin-top: 0.35rem;">
+                  {cluster.title}
+                </h2>
+              </div>
+            </div>
+
+            <p class="text-muted" style="line-height: 1.7; margin-bottom: 1.5rem;">
+              {cluster.description}
+            </p>
+
+            <div class="cluster-body">
+              <div class="cluster-concepts">
+                <h3 class="font-display text-sm text-cyan" style="text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 0.75rem;">
+                  Core Technical Concepts:
+                </h3>
+                <ul class="concepts-list">
+                  {cluster.concepts.map((concept) => (
+                    <li class="flex items-center gap-sm text-muted text-sm">
+                      <span class="text-cyan">▹</span>
+                      <span>{concept}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+
+              <div class="cluster-resources">
+                <h3 class="font-display text-sm text-violet" style="text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 0.75rem;">
+                  Connected Resources:
+                </h3>
+                <div class="resource-links flex flex-col gap-sm">
+                  {cluster.links.map((link) => (
+                    <a href={link.href} class="resource-link">
+                      <span class="font-medium">{link.title}</span>
+                      <span class="resource-type font-mono text-xs">{link.type} →</span>
+                    </a>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </article>
+        ))}
+      </div>
+    </div>
+  </section>
+</ShowcaseLayout>
+
+<style>
+  .breadcrumb-link {
+    transition: color var(--transition-fast);
+  }
+  .breadcrumb-link:hover {
+    color: var(--accent-cyan);
+  }
+
+  .clusters-container {
+    display: flex;
+    flex-direction: column;
+    gap: 2.5rem;
+  }
+
+  .cluster-card {
+    padding: 2rem;
+  }
+
+  .cluster-header {
+    display: flex;
+    align-items: flex-start;
+    gap: 1.25rem;
+    margin-bottom: 1.25rem;
+  }
+
+  .cluster-icon {
+    font-size: 2.5rem;
+    background: var(--showcase-bg-elevated);
+    border: 1px solid var(--showcase-border);
+    border-radius: var(--radius);
+    padding: 0.5rem 0.85rem;
+  }
+
+  .tag-cyan {
+    border-color: var(--accent-cyan);
+    color: var(--accent-cyan);
+    background: var(--accent-cyan-muted);
+  }
+
+  .cluster-body {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+    padding-top: 1.25rem;
+    border-top: 1px solid var(--showcase-border);
+  }
+
+  @media (min-width: 768px) {
+    .cluster-body {
+      grid-template-columns: 1.2fr 1fr;
+    }
+  }
+
+  .concepts-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .resource-link {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.75rem 1rem;
+    background: var(--showcase-bg-elevated);
+    border: 1px solid var(--showcase-border);
+    border-radius: var(--radius);
+    color: var(--text-primary);
+    font-size: 0.875rem;
+    transition: all var(--transition-fast);
+  }
+
+  .resource-link:hover {
+    border-color: var(--accent-cyan);
+    background: var(--accent-cyan-muted);
+    transform: translateX(4px);
+  }
+
+  .resource-type {
+    color: var(--accent-cyan);
+  }
+</style>

@@ -1,0 +1,138 @@
+---
+import { getCollection, render } from 'astro:content';
+import BlogLayout from '../../layouts/BlogLayout.astro';
+import YouTubeFacade from '../../components/YouTubeFacade.astro';
+
+export async function getStaticPaths() {
+  const posts = await getCollection('blog-en');
+  return posts.map((post) => ({
+    params: { slug: post.id },
+    props: { post },
+  }));
+}
+
+const { post } = Astro.props;
+const { Content } = await render(post);
+
+const siteUrl = 'https://elitescienceclub.org';
+const canonicalUrl = `${siteUrl}/blog/${post.id}/`;
+
+// Find Tamil translation
+const taPosts = await getCollection('blog-ta');
+const translationSlug = post.data.translationSlug;
+const hasTranslation = translationSlug && taPosts.some((p) => p.id === translationSlug);
+const translationHref = hasTranslation ? `/ta/blog/${translationSlug}/` : undefined;
+
+// hreflang alternates
+const hreflangAlternates = [];
+if (hasTranslation) {
+  hreflangAlternates.push(
+    { lang: 'en', href: canonicalUrl },
+    { lang: 'ta', href: `${siteUrl}/ta/blog/${translationSlug}/` },
+    { lang: 'x-default', href: canonicalUrl },
+  );
+}
+
+// Reading time (~200 wpm)
+const wordCount = post.body ? post.body.split(/\s+/).length : 0;
+const readingTime = `${Math.max(1, Math.ceil(wordCount / 200))} min read`;
+
+// JSON-LD: TechArticle
+const techArticleLd: Record<string, unknown> = {
+  '@context': 'https://schema.org',
+  '@type': 'TechArticle',
+  headline: post.data.title,
+  description: post.data.description,
+  datePublished: post.data.pubDate.toISOString(),
+  author: { '@id': `${siteUrl}/#organization` },
+  publisher: { '@id': `${siteUrl}/#organization` },
+  mainEntityOfPage: canonicalUrl,
+  inLanguage: 'en',
+  keywords: post.data.tags.join(', '),
+};
+
+// Nested VideoObject if real youtubeId is configured (prevents GSC rich snippet errors on placeholder IDs)
+if (post.data.youtubeId && !post.data.youtubeId.startsWith('REPLACE_WITH_')) {
+  techArticleLd.video = {
+    '@type': 'VideoObject',
+    name: post.data.title,
+    description: post.data.description,
+    thumbnailUrl: `https://img.youtube.com/vi/${post.data.youtubeId}/maxresdefault.jpg`,
+    uploadDate: post.data.pubDate.toISOString(),
+    contentUrl: `https://www.youtube.com/watch?v=${post.data.youtubeId}`,
+    embedUrl: `https://www.youtube-nocookie.com/embed/${post.data.youtubeId}`,
+  };
+}
+
+// BreadcrumbList
+const breadcrumbLd = {
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  itemListElement: [
+    { '@type': 'ListItem', position: 1, name: 'Home', item: siteUrl },
+    { '@type': 'ListItem', position: 2, name: 'Blog', item: `${siteUrl}/blog/` },
+    { '@type': 'ListItem', position: 3, name: post.data.title, item: canonicalUrl },
+  ],
+};
+---
+
+<BlogLayout
+  title={post.data.title}
+  description={post.data.description}
+  canonical={canonicalUrl}
+  lang="en"
+  hreflangAlternates={hreflangAlternates}
+  jsonLd={[techArticleLd, breadcrumbLd]}
+  pubDate={post.data.pubDate.toISOString()}
+  readingTime={readingTime}
+  tags={post.data.tags}
+  category={post.data.category}
+  translationHref={translationHref}
+>
+  <h1>{post.data.title}</h1>
+
+  {/* Companion YouTube Video Facade */}
+  {post.data.youtubeId && (
+    <div style="margin-block: 1.5em;">
+      <YouTubeFacade videoId={post.data.youtubeId} title={post.data.title} />
+      <p style="text-align: center; margin-top: 0.5rem;">
+        <a
+          href={`https://www.youtube.com/watch?v=${post.data.youtubeId}`}
+          target="_blank"
+          rel="noopener noreferrer"
+          style="font-size: 0.8rem; color: var(--reading-ink-dim);"
+        >
+          Watch on YouTube →
+        </a>
+      </p>
+    </div>
+  )}
+
+  <Content />
+
+  {/* Translation link */}
+  {hasTranslation && (
+    <aside class="translation-banner">
+      <p>
+        🌐 இந்தக் கட்டுரையை தமிழில் படிக்க:
+        <a href={`/ta/blog/${translationSlug}/`}>தமிழ் பதிப்பு →</a>
+      </p>
+    </aside>
+  )}
+</BlogLayout>
+
+<style>
+  .translation-banner {
+    margin-top: 2rem;
+    padding: 1rem 1.25rem;
+    background: #F0FDFA;
+    border: 1px solid #99F6E4;
+    border-radius: var(--radius);
+    font-size: 0.95rem;
+  }
+
+  .translation-banner a {
+    color: var(--accent-cyan);
+    font-weight: 600;
+  }
+</style>
