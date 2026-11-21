@@ -1,0 +1,97 @@
+---
+import ShowcaseLayout from '../../../layouts/ShowcaseLayout.astro';
+import { getCollection } from 'astro:content';
+
+const siteUrl = 'https://elitescienceclub.org';
+
+const posts = (await getCollection('blog-ta'))
+  .sort((a, b) => b.data.pubDate.getTime() - a.data.pubDate.getTime());
+
+const breadcrumbLd = {
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  itemListElement: [
+    { '@type': 'ListItem', position: 1, name: 'Home', item: siteUrl },
+    { '@type': 'ListItem', position: 2, name: 'வலைப்பதிவு', item: `${siteUrl}/ta/blog/` },
+  ],
+};
+
+const hreflangAlternates = [
+  { lang: 'en', href: `${siteUrl}/blog/` },
+  { lang: 'ta', href: `${siteUrl}/ta/blog/` },
+  { lang: 'x-default', href: `${siteUrl}/blog/` },
+];
+---
+
+<ShowcaseLayout
+  title="வலைப்பதிவு — Elite Science Club"
+  description="வானூர்தி இயற்பியல், குறைக்கடத்தி அறிவியல், உட்பொதிக்கப்பட்ட AI மற்றும் ESP32-S3 ரோபாட்டிக்ஸ் பற்றிய தமிழ் தொழில்நுட்ப கட்டுரைகள்."
+  lang="ta"
+  hreflangAlternates={hreflangAlternates}
+  jsonLd={[breadcrumbLd]}
+>
+  <!-- Breadcrumb -->
+  <nav class="container" style="padding-top: 1.5rem;" aria-label="Breadcrumb">
+    <ol class="breadcrumb flex items-center gap-sm font-mono text-sm">
+      <li><a href="/" class="text-muted breadcrumb-link">முகப்பு</a></li>
+      <li class="text-dim" aria-hidden="true">/</li>
+      <li class="text-cyan" aria-current="page">வலைப்பதிவு</li>
+    </ol>
+  </nav>
+
+  <section class="section">
+    <div class="container">
+      <div style="text-align: center; margin-bottom: 2.5rem;">
+        <h1 class="font-display" style="font-size: clamp(2rem, 5vw, 3rem); margin-bottom: 0.5rem;">
+          <span class="text-cyan">தொழில்நுட்ப</span> வலைப்பதிவு
+        </h1>
+        <p class="text-muted tamil-text" style="max-width: 50ch; margin-inline: auto;">
+          தமிழில் ஆழமான தொழில்நுட்ப கட்டுரைகள். ஒவ்வொரு பதிவும்
+          <a href="https://www.youtube.com/@EliteScienceClub" target="_blank" rel="noopener noreferrer" class="text-cyan">@EliteScienceClub</a>
+          YouTube Short-உடன் இணைக்கப்பட்டுள்ளது.
+        </p>
+        <div style="margin-top: 1rem;">
+          <a href="/blog/" class="btn btn-outline" style="font-size: 0.8rem;">
+            Read in English →
+          </a>
+        </div>
+      </div>
+
+      {posts.length === 0 && (
+        <p class="text-muted" style="text-align: center;">இன்னும் பதிவுகள் இல்லை. விரைவில் வாருங்கள்!</p>
+      )}
+
+      <div class="grid grid-2">
+        {posts.map((post) => (
+          <a href={`/ta/blog/${post.id}/`} class="card post-card">
+            <div class="flex items-center gap-sm" style="margin-bottom: 0.75rem;">
+              <span class="tag">{post.data.category}</span>
+              <time datetime={post.data.pubDate.toISOString()} class="font-mono text-xs text-dim">
+                {post.data.pubDate.toLocaleDateString('ta-IN', { year: 'numeric', month: 'short', day: 'numeric' })}
+              </time>
+            </div>
+            <h2 class="font-display text-lg tamil-text" style="margin-bottom: 0.5rem; color: var(--text-primary);">
+              {post.data.title}
+            </h2>
+            <p class="text-muted text-sm tamil-text" style="line-height: 1.6;">
+              {post.data.description}
+            </p>
+            <div class="flex flex-wrap gap-sm" style="margin-top: 0.75rem;">
+              {post.data.tags.slice(0, 3).map((tag) => (
+                <span class="font-mono text-xs text-dim">#{tag}</span>
+              ))}
+            </div>
+          </a>
+        ))}
+      </div>
+    </div>
+  </section>
+</ShowcaseLayout>
+
+<style>
+  .breadcrumb-link { transition: color var(--transition-fast); }
+  .breadcrumb-link:hover { color: var(--accent-cyan); }
+  .post-card { display: block; text-decoration: none; }
+  .post-card h2 { transition: color var(--transition-fast); }
+  .post-card:hover h2 { color: var(--accent-cyan); }
+</style>

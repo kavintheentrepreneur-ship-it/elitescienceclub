@@ -1,0 +1,324 @@
+---
+import ShowcaseLayout from '../../layouts/ShowcaseLayout.astro';
+import YouTubeFacade from '../../components/YouTubeFacade.astro';
+
+const siteUrl = 'https://elitescienceclub.org';
+
+const breadcrumbLd = {
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  itemListElement: [
+    { '@type': 'ListItem', position: 1, name: 'Home', item: siteUrl },
+    { '@type': 'ListItem', position: 2, name: 'Media Archive', item: `${siteUrl}/media/` },
+  ],
+};
+
+const videos = [
+  {
+    title: 'What Happens If You Put Regular Air in a Jet Tire?',
+    description: 'Explore the thermodynamic physics behind why commercial airlines and military jets rely strictly on high-purity nitrogen instead of compressed air for extreme altitude and high-friction landings.',
+    videoId: 'A5XYZNz_KFo',
+    uploadDate: '2026-11-12T00:00:00Z',
+    duration: 'PT25S',
+    format: '4K 2.5D Short',
+    aspect: '9:16' as const,
+    category: 'Aviation Physics',
+    enBlogSlug: '/blog/why-airplane-tires-use-nitrogen/',
+    taBlogSlug: '/ta/blog/why-airplane-tires-use-nitrogen/',
+    status: 'Published',
+  },
+  {
+    title: 'Why "Perfect" Concrete Always Fails',
+    description: 'Investigating curing chemistry, microscopic micro-cracking, calcium hydroxide leaching, and why unreinforced concrete inevitably fractures under tensile load.',
+    videoId: 'E7NBmyzIMzY',
+    uploadDate: '2026-11-08T00:00:00Z',
+    duration: 'PT44S',
+    format: '4K 2.5D Short',
+    aspect: '9:16' as const,
+    category: 'Materials Science',
+    status: 'Published',
+  },
+  {
+    title: "You Don't Need $1,000 to Build an AI Robot",
+    description: 'Democratizing robotics hardware from Cuddalore: how the ESP32-S3 dual-core microcontroller and quantized INT8 CNNs replace expensive compute modules on a high-school budget.',
+    videoId: 'MvS0QW3PZgI',
+    uploadDate: '2026-11-07T00:00:00Z',
+    duration: 'PT35S',
+    format: '4K 2.5D Short',
+    aspect: '9:16' as const,
+    category: 'Embedded AI & Robotics',
+    projectSlug: '/projects/esp32-s3-ai-robotics/',
+    status: 'Published',
+  },
+  {
+    title: 'India Designed 20% of the World’s Chips—Then Bought Its Own Drawings Back!',
+    description: 'The gripping economic and solid-state physics history of India\'s semiconductor design dominance vs silicon fabrication shortfall, analyzed by student researchers.',
+    videoId: 'kzgEPPkoPAc',
+    uploadDate: '2026-11-06T00:00:00Z',
+    duration: 'PT59S',
+    format: '4K 2.5D Short',
+    aspect: '9:16' as const,
+    category: 'Semiconductor Physics',
+    status: 'Published',
+  },
+  {
+    title: 'What Is Elite Science Club? Official Intro | Cuddalore, Tamil Nadu',
+    description: 'Our charter in 11 seconds: Science For Service, student-led open-source hardware engineering, and bilingual STEM communication from Cuddalore, Tamil Nadu.',
+    videoId: 'fVsOmF73o-A',
+    uploadDate: '2026-10-09T00:00:00Z',
+    duration: 'PT11S',
+    format: '4K 2.5D Short',
+    aspect: '9:16' as const,
+    category: 'Club Charter',
+    aboutSlug: '/about/',
+    status: 'Published',
+  },
+  {
+    title: 'Why Airplane Windows Have a Tiny Bleed Hole',
+    description: 'Discover how the breather hole in commercial aircraft acrylic window panels regulates cabin-to-exterior pressure differential and prevents passenger window fogging.',
+    videoId: 'REPLACE_WITH_YT_ID_BLEED_HOLE',
+    format: '4K 2.5D Short',
+    aspect: '9:16' as const,
+    category: 'Aviation Physics',
+    status: 'Upcoming Short',
+    upcomingNote: 'Companion bilingual technical post in production',
+  },
+  {
+    title: 'Special Relativity Visual Explainer: Time Dilation & Spacetime',
+    description: 'A 16:9 3D motion graphic visual walkthrough of Einstein’s special relativity, light clocks, the Lorentz factor, and how relative speed warps perceived time.',
+    videoId: 'REPLACE_WITH_YT_ID_RELATIVITY',
+    format: '16:9 3D Explainer',
+    aspect: '16:9' as const,
+    category: 'Modern Physics',
+    status: 'Upcoming Explainer',
+    upcomingNote: 'Deep-dive animation & derivation notes coming soon',
+  },
+];
+
+// Filter out placeholder videos for VideoObject schema so Google Rich Results Test never warns on draft IDs
+const validVideosForLd = videos.filter((v) => v.videoId && !v.videoId.startsWith('REPLACE_WITH_'));
+
+const itemListLd = validVideosForLd.length > 0 ? {
+  '@context': 'https://schema.org',
+  '@type': 'ItemList',
+  name: 'Elite Science Club Video Archive',
+  description: 'Curated 4K 2.5D Shorts and 16:9 science explainers produced by @EliteScienceClub in Cuddalore, Tamil Nadu.',
+  itemListElement: validVideosForLd.map((v, index) => ({
+    '@type': 'ListItem',
+    position: index + 1,
+    item: {
+      '@type': 'VideoObject',
+      name: v.title,
+      description: v.description,
+      thumbnailUrl: `https://img.youtube.com/vi/${v.videoId}/maxresdefault.jpg`,
+      uploadDate: v.uploadDate || '2026-11-12T00:00:00Z',
+      duration: v.duration,
+      contentUrl: `https://www.youtube.com/watch?v=${v.videoId}`,
+      embedUrl: `https://www.youtube-nocookie.com/embed/${v.videoId}`,
+      publisher: { '@id': `${siteUrl}/#organization` },
+    },
+  })),
+} : undefined;
+---
+
+<ShowcaseLayout
+  title="Media Archive — 4K Shorts & 16:9 Explainers"
+  description="Watch 4K 2.5D YouTube Shorts and 16:9 science explainers by @EliteScienceClub, Cuddalore. Each video connects to companion bilingual technical blogs."
+  jsonLd={[breadcrumbLd, ...(itemListLd ? [itemListLd] : [])]}
+>
+  <!-- Breadcrumb -->
+  <nav class="container" style="padding-top: 1.5rem;" aria-label="Breadcrumb">
+    <ol class="breadcrumb flex items-center gap-sm font-mono text-sm">
+      <li><a href="/" class="text-muted breadcrumb-link">Home</a></li>
+      <li class="text-dim" aria-hidden="true">/</li>
+      <li class="text-cyan" aria-current="page">Media Archive</li>
+    </ol>
+  </nav>
+
+  <!-- Hero -->
+  <section class="section" style="padding-bottom: 2rem;">
+    <div class="container" style="text-align: center;">
+      <p class="font-mono text-sm text-cyan" style="margin-bottom: 0.75rem;">🎬 Official YouTube: @EliteScienceClub</p>
+      <h1 class="font-display" style="font-size: clamp(2rem, 5vw, 3rem); margin-bottom: 1rem;">
+        Science <span class="text-cyan">Media Archive</span>
+      </h1>
+      <p class="text-muted" style="max-width: 60ch; margin-inline: auto; font-size: 1.05rem; line-height: 1.7;">
+        Zero fluff, high-density science communication. Every 60-second 4K Short and 16:9 explainer is
+        engineered with companion bilingual articles for deep conceptual understanding.
+      </p>
+      <div class="flex justify-center gap-md" style="margin-top: 1.5rem;">
+        <a
+          href="https://www.youtube.com/@EliteScienceClub"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="btn btn-primary"
+        >
+          ▶ Subscribe on YouTube
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Video Gallery -->
+  <section class="section" style="padding-top: 0;">
+    <div class="container">
+      <div class="media-grid">
+        {videos.map((vid) => (
+          <article class="card media-card">
+            <div class="media-preview">
+              <YouTubeFacade
+                videoId={vid.videoId}
+                title={vid.title}
+                aspect={vid.aspect}
+              />
+            </div>
+
+            <div class="media-content">
+              <div class="flex flex-wrap items-center gap-sm" style="margin-bottom: 0.75rem;">
+                <span class:list={['tag', vid.format.includes('Short') ? 'tag-cyan' : 'tag-violet']}>
+                  {vid.format}
+                </span>
+                <span class="font-mono text-xs text-dim">{vid.category}</span>
+              </div>
+
+              <h2 class="font-display text-lg" style="margin-bottom: 0.5rem; color: var(--text-primary);">
+                {vid.title}
+              </h2>
+
+              <p class="text-muted text-sm" style="line-height: 1.6; margin-bottom: 1rem;">
+                {vid.description}
+              </p>
+
+              {/* Cross-linking to Companion Blogs */}
+              {vid.enBlogSlug && (
+                <div class="companion-box">
+                  <p class="font-mono text-xs text-cyan" style="margin-bottom: 0.4rem;">
+                    📖 Companion Technical Reads:
+                  </p>
+                  <div class="flex flex-wrap gap-sm">
+                    <a href={vid.enBlogSlug} class="btn-link">
+                      English Deep-Dive →
+                    </a>
+                    {vid.taBlogSlug && (
+                      <a href={vid.taBlogSlug} class="btn-link text-violet">
+                        தமிழ் கட்டுரை →
+                      </a>
+                    )}
+                  </div>
+                </div>
+              )}
+
+              {/* Cross-linking to Hardware Project */}
+              {vid.projectSlug && (
+                <div class="companion-box">
+                  <p class="font-mono text-xs text-violet" style="margin-bottom: 0.4rem;">
+                    🤖 Featured Hardware Build:
+                  </p>
+                  <a href={vid.projectSlug} class="btn-link text-violet">
+                    ESP32-S3 Architecture &amp; BOM →
+                  </a>
+                </div>
+              )}
+
+              {/* Cross-linking to About */}
+              {vid.aboutSlug && (
+                <div class="companion-box">
+                  <p class="font-mono text-xs text-cyan" style="margin-bottom: 0.4rem;">
+                    🔬 Learn More About ESC:
+                  </p>
+                  <a href={vid.aboutSlug} class="btn-link text-cyan">
+                    Read Our Mission &amp; Team →
+                  </a>
+                </div>
+              )}
+
+              {vid.upcomingNote && (
+                <div class="upcoming-badge font-mono text-xs text-dim">
+                  ⏳ {vid.upcomingNote}
+                </div>
+              )}
+            </div>
+          </article>
+        ))}
+      </div>
+    </div>
+  </section>
+</ShowcaseLayout>
+
+<style>
+  .breadcrumb-link {
+    transition: color var(--transition-fast);
+  }
+  .breadcrumb-link:hover {
+    color: var(--accent-cyan);
+  }
+
+  .media-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 2rem;
+  }
+
+  @media (min-width: 900px) {
+    .media-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  .media-card {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+  }
+
+  .media-preview {
+    width: 100%;
+  }
+
+  .media-content {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+  }
+
+  .tag-cyan {
+    border-color: var(--accent-cyan);
+    color: var(--accent-cyan);
+    background: var(--accent-cyan-muted);
+  }
+
+  .tag-violet {
+    border-color: var(--accent-violet);
+    color: var(--accent-violet);
+    background: var(--accent-violet-muted);
+  }
+
+  .companion-box {
+    margin-top: auto;
+    padding-top: 1rem;
+    border-top: 1px solid var(--showcase-border);
+  }
+
+  .btn-link {
+    font-size: 0.825rem;
+    font-weight: 600;
+    color: var(--accent-cyan);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+    transition: color var(--transition-fast);
+  }
+
+  .btn-link:hover {
+    color: var(--accent-cyan-hover);
+  }
+
+  .btn-link.text-violet {
+    color: var(--accent-violet-hover);
+  }
+
+  .upcoming-badge {
+    margin-top: auto;
+    padding-top: 0.75rem;
+    border-top: 1px solid var(--showcase-border);
+  }
+</style>

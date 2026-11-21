@@ -1,0 +1,480 @@
+---
+import ShowcaseLayout from '../../layouts/ShowcaseLayout.astro';
+import YouTubeFacade from '../../components/YouTubeFacade.astro';
+
+const siteUrl = 'https://elitescienceclub.org';
+const pageUrl = `${siteUrl}/projects/esp32-s3-ai-robotics/`;
+
+const breadcrumbLd = {
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  itemListElement: [
+    { '@type': 'ListItem', position: 1, name: 'Home', item: siteUrl },
+    { '@type': 'ListItem', position: 2, name: 'Projects', item: `${siteUrl}/projects/` },
+    { '@type': 'ListItem', position: 3, name: 'ESP32-S3 AI Robotics', item: pageUrl },
+  ],
+};
+
+const creativeWorkLd = {
+  '@context': 'https://schema.org',
+  '@type': 'CreativeWork',
+  '@id': `${pageUrl}#project`,
+  name: 'ESP32-S3 Autonomous AI Edge Robotics Rover',
+  description: 'An open-source student-built edge AI robotics platform driven by the dual-core ESP32-S3 microchip with real-time FreeRTOS task partitioning, on-device CNN vision, and closed-loop motor telemetry.',
+  url: pageUrl,
+  author: { '@id': `${siteUrl}/#organization` },
+  publisher: { '@id': `${siteUrl}/#organization` },
+  keywords: 'ESP32-S3, Edge AI, FreeRTOS, Embedded C++, TinyML, Robotics, Cuddalore',
+  video: {
+    '@type': 'VideoObject',
+    name: "You Don't Need $1,000 to Build an AI Robot",
+    description: 'Student-led ESP32-S3 AI robotics build overview by Elite Science Club.',
+    thumbnailUrl: 'https://img.youtube.com/vi/MvS0QW3PZgI/maxresdefault.jpg',
+    uploadDate: '2026-11-07T00:00:00Z',
+    duration: 'PT35S',
+    contentUrl: 'https://www.youtube.com/watch?v=MvS0QW3PZgI',
+    embedUrl: 'https://www.youtube-nocookie.com/embed/MvS0QW3PZgI',
+  },
+};
+
+const softwareSourceCodeLd = {
+  '@context': 'https://schema.org',
+  '@type': 'SoftwareSourceCode',
+  name: 'ESP32-S3 Dual-Core AI Robotics Firmware Core',
+  programmingLanguage: 'C++',
+  runtimePlatform: 'ESP-IDF / FreeRTOS',
+  codeRepository: 'https://github.com/EliteScienceClub',
+  author: { '@id': `${siteUrl}/#organization` },
+};
+
+const bomItems = [
+  {
+    ref: 'U1',
+    component: 'ESP32-S3-WROOM-1 (N16R8)',
+    spec: 'Dual-core Xtensa LX7 @ 240MHz, 16MB Flash, 8MB Octal PSRAM, Vector Extensions',
+    subsystem: 'Compute & Processing',
+    role: 'Central AI inference and control core',
+  },
+  {
+    ref: 'CAM1',
+    component: 'OV2640 Image Sensor Module',
+    spec: '2.0 Megapixel CMOS, 8-bit DVP parallel bus, UXGA / CIF support',
+    subsystem: 'Vision Perception',
+    role: 'Captures frames for on-device object detection',
+  },
+  {
+    ref: 'MIC1',
+    component: 'INMP441 Omnidirectional MEMS Mic',
+    spec: 'Digital I2S output, 24-bit audio sampling, 61 dBA SNR',
+    subsystem: 'Acoustic Perception',
+    role: 'Keyword spotting and acoustic command recognition',
+  },
+  {
+    ref: 'U2',
+    component: 'DRV8833 Dual H-Bridge Driver',
+    spec: 'Up to 10.8V, 1.5A per channel RMS, hardware current limiting & PWM',
+    subsystem: 'Motion & Actuation',
+    role: 'Dual DC gear-motor differential drive control',
+  },
+  {
+    ref: 'M1-M2',
+    component: 'N20 Metal Geared DC Motors',
+    spec: '6V 300 RPM with integrated 12-CPR magnetic quadrature encoders',
+    subsystem: 'Motion & Actuation',
+    role: 'Closed-loop wheel velocity feedback & movement',
+  },
+  {
+    ref: 'SEN1',
+    component: 'MPU6050 6-Axis Motion Sensor',
+    spec: '3-axis gyroscope, 3-axis accelerometer, 400kHz I2C interface',
+    subsystem: 'Navigation & Inertial',
+    role: 'Heading tracking, tilt sensing, and rollover protection',
+  },
+  {
+    ref: 'SEN2',
+    component: 'HC-SR04P Ultrasonic Sensor',
+    spec: '3.3V compatible, 2cm to 400cm range, 3mm resolution',
+    subsystem: 'Obstacle Detection',
+    role: 'Hardware fail-safe distance barrier detection',
+  },
+  {
+    ref: 'PWR1',
+    component: '2S 7.4V 18650 Li-Ion Pack (2000mAh)',
+    spec: '7.4V nominal, integrated BMS protection board (overcharge/discharge)',
+    subsystem: 'Power & Regulation',
+    role: 'Primary energy reservoir for drive motors & electronics',
+  },
+  {
+    ref: 'VR1',
+    component: 'MP1584EN Step-Down DC-DC Converter',
+    spec: 'High-efficiency switching regulator, tuned to 5.0V @ up to 3A output',
+    subsystem: 'Power & Regulation',
+    role: 'Steps down battery voltage to stabilized 5V logic rail',
+  },
+];
+
+const pinMappings = [
+  { signal: 'Camera Pixel Data [D0–D7]', gpio: 'GPIO 11, 12, 13, 14, 15, 16, 17, 18', bus: 'DVP Parallel' },
+  { signal: 'Camera XCLK & PCLK', gpio: 'GPIO 10 (XCLK), GPIO 9 (PCLK)', bus: 'DVP Timing' },
+  { signal: 'Camera SCCB (I2C Config)', gpio: 'GPIO 21 (SDA), GPIO 22 (SCL)', bus: 'I2C Bus 0' },
+  { signal: 'INMP441 I2S WS (Word Select)', gpio: 'GPIO 4', bus: 'I2S Bus 0' },
+  { signal: 'INMP441 I2S SCK (Bit Clock)', gpio: 'GPIO 5', bus: 'I2S Bus 0' },
+  { signal: 'INMP441 I2S SD (Data Out)', gpio: 'GPIO 6', bus: 'I2S Bus 0' },
+  { signal: 'DRV8833 Motor Left IN1 / IN2', gpio: 'GPIO 1 & GPIO 2 (LEDC PWM)', bus: 'LEDC Channel 0/1' },
+  { signal: 'DRV8833 Motor Right IN3 / IN4', gpio: 'GPIO 42 & GPIO 41 (LEDC PWM)', bus: 'LEDC Channel 2/3' },
+  { signal: 'MPU6050 IMU SDA / SCL', gpio: 'GPIO 8 (SDA), GPIO 7 (SCL)', bus: 'I2C Bus 1' },
+  { signal: 'Ultrasonic Trig / Echo', gpio: 'GPIO 38 (Trig), GPIO 39 (Echo)', bus: 'General GPIO' },
+];
+---
+
+<ShowcaseLayout
+  title="ESP32-S3 AI Edge Robotics Build Log — Elite Science Club"
+  description="Comprehensive open-source build log of the student-developed ESP32-S3 edge AI robotics rover: architecture breakdown, complete BOM table, pinout mapping, and FreeRTOS C++ firmware."
+  jsonLd={[breadcrumbLd, creativeWorkLd, softwareSourceCodeLd]}
+>
+  <!-- Breadcrumb -->
+  <nav class="container" style="padding-top: 1.5rem;" aria-label="Breadcrumb">
+    <ol class="breadcrumb flex items-center gap-sm font-mono text-sm">
+      <li><a href="/" class="text-muted breadcrumb-link">Home</a></li>
+      <li class="text-dim" aria-hidden="true">/</li>
+      <li><a href="/projects/" class="text-muted breadcrumb-link">Projects</a></li>
+      <li class="text-dim" aria-hidden="true">/</li>
+      <li class="text-cyan" aria-current="page">ESP32-S3 AI Robotics</li>
+    </ol>
+  </nav>
+
+  <!-- Hero Header -->
+  <header class="section" style="padding-bottom: 2rem;">
+    <div class="container">
+      <div class="flex items-center gap-sm" style="margin-bottom: 0.75rem;">
+        <span class="tag tag-cyan font-mono">Flagship Hardware Build</span>
+        <span class="font-mono text-xs text-dim">Cuddalore STEM Lab · Ver. 1.0</span>
+      </div>
+      <h1 class="font-display" style="font-size: clamp(2rem, 5vw, 3.25rem); margin-bottom: 1rem;">
+        ESP32-S3 <span class="text-cyan">AI Robotics</span> Platform
+      </h1>
+      <p class="text-muted" style="max-width: 68ch; font-size: 1.1rem; line-height: 1.7;">
+        An autonomous, open-source micro-rover designed and built by the students of Elite Science Club.
+        Featuring on-device INT8 convolutional neural network inference, deterministic FreeRTOS dual-core
+        task dispatching, and closed-loop motor telemetry.
+      </p>
+    </div>
+  </header>
+
+  <!-- Video Showcase Spotlight -->
+  <section class="section" style="padding-top: 0; padding-bottom: 2.5rem;">
+    <div class="container" style="max-width: 440px; text-align: center;">
+      <div class="card" style="padding: 1.5rem;">
+        <div class="flex items-center justify-between" style="margin-bottom: 0.75rem;">
+          <span class="tag tag-violet font-mono">Build Overview Short</span>
+          <span class="font-mono text-xs text-dim">@EliteScienceClub</span>
+        </div>
+        <YouTubeFacade
+          videoId="MvS0QW3PZgI"
+          title="You Don't Need $1,000 to Build an AI Robot"
+          aspect="9:16"
+        />
+        <h2 class="font-display text-base text-primary" style="margin-top: 1rem; margin-bottom: 0.25rem;">
+          You Don't Need $1,000 to Build an AI Robot
+        </h2>
+        <p class="text-muted text-xs">
+          Watch our 35-second demo on why edge AI robotics is accessible on a student budget.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- System Architecture Section -->
+  <section class="section" style="padding-top: 0;">
+    <div class="container">
+      <h2 class="font-display text-2xl" style="margin-bottom: 1.5rem; color: var(--text-primary);准>
+        <span class="text-cyan">1.</span> System Architecture Breakdown
+      </h2>
+
+      <div class="grid grid-2" style="gap: 1.5rem; margin-bottom: 2.5rem;">
+        <div class="card">
+          <h3 class="font-display text-lg text-cyan" style="margin-bottom: 0.5rem;">
+            ⚡ Dual-Core Compute & Neural Engine
+          </h3>
+          <p class="text-muted text-sm" style="line-height: 1.7;">
+            The rover is powered by the <strong>ESP32-S3-WROOM-1 (N16R8)</strong>, housing two 32-bit
+            Xtensa LX7 cores running at 240 MHz. Unlike older microcontrollers, the ESP32-S3 includes
+            dedicated vector instructions (PIE) that accelerate matrix multiply-accumulate operations,
+            enabling quantized INT8 machine learning models to run locally without cloud latency or connectivity.
+          </p>
+        </div>
+
+        <div class="card">
+          <h3 class="font-display text-lg text-violet" style="margin-bottom: 0.5rem;">
+            🔄 Real-Time FreeRTOS Task Separation
+          </h3>
+          <p class="text-muted text-sm" style="line-height: 1.7;">
+            To prevent perception stalls from interrupting kinematic motor control, we pin workloads to specific cores:
+          </p>
+          <ul style="margin-top: 0.5rem; display: flex; flex-direction: column; gap: 0.4rem;" class="text-muted text-sm">
+            <li><strong class="text-primary">Core 0 (Perception Loop):</strong> Captures OV2640 camera frames, unpacks I2S audio buffers, and executes neural network forward passes.</li>
+            <li><strong class="text-primary">Core 1 (Kinematics & Telemetry):</strong> Runs the 100Hz closed-loop PID velocity controller, reads wheel encoders, and handles ultrasonic fail-safe polling.</li>
+          </ul>
+        </div>
+
+        <div class="card">
+          <h3 class="font-display text-lg text-cyan" style="margin-bottom: 0.5rem;">
+            👁️ Multi-Modal Edge Perception
+          </h3>
+          <p class="text-muted text-sm" style="line-height: 1.7;">
+            Visual inputs flow through an <strong>OV2640 sensor</strong> directly into 8MB of Octal PSRAM via DMA.
+            Acoustic keyword spotting is powered by an <strong>INMP441 omnidirectional MEMS microphone</strong>
+            streaming 24-bit audio directly over an I2S digital audio bus, eliminating analog noise interference.
+          </p>
+        </div>
+
+        <div class="card">
+          <h3 class="font-display text-lg text-violet" style="margin-bottom: 0.5rem;">
+            🔋 Power Architecture & Filtering
+          </h3>
+          <p class="text-muted text-sm" style="line-height: 1.7;">
+            Supplied by a 2S 7.4V Li-Ion battery pack (2000 mAh), the power rails are split into an unfiltered
+            motor rail and an isolated 5.0V digital logic rail driven by a switching MP1584EN buck regulator.
+            Decoupling capacitors (100nF ceramic + 470µF low-ESR electrolytic) isolate motor inductive kickback
+            from resetting the processor.
+          </p>
+        </div>
+      </div>
+
+      <!-- Bill of Materials (BOM) Table -->
+      <h2 class="font-display text-2xl" style="margin-bottom: 1rem; color: var(--text-primary);">
+        <span class="text-violet">2.</span> Bill of Materials (BOM)
+      </h2>
+      <p class="text-muted text-sm" style="margin-bottom: 1.5rem;">
+        Complete open hardware specification. All components are standard, widely available commercial off-the-shelf (COTS) parts.
+      </p>
+
+      <div class="table-wrapper" style="margin-bottom: 3rem;">
+        <table class="bom-table">
+          <thead>
+            <tr>
+              <th>Ref</th>
+              <th>Component</th>
+              <th>Technical Specification</th>
+              <th>Subsystem</th>
+              <th>Functional Role</th>
+            </tr>
+          </thead>
+          <tbody>
+            {bomItems.map((item) => (
+              <tr>
+                <td class="font-mono text-xs text-cyan">{item.ref}</td>
+                <td class="font-semibold text-primary">{item.component}</td>
+                <td class="text-sm text-muted">{item.spec}</td>
+                <td><span class="tag tag-sm">{item.subsystem}</span></td>
+                <td class="text-sm text-muted">{item.role}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Pinout & Wiring Table -->
+      <h2 class="font-display text-2xl" style="margin-bottom: 1rem; color: var(--text-primary);">
+        <span class="text-cyan">3.</span> Pinout & Hardware Bus Assignments
+      </h2>
+      <p class="text-muted text-sm" style="margin-bottom: 1.5rem;">
+        Carefully verified GPIO allocation ensuring zero pin strapping conflicts during ESP32-S3 boot cycle.
+      </p>
+
+      <div class="table-wrapper" style="margin-bottom: 3rem;">
+        <table class="bom-table">
+          <thead>
+            <tr>
+              <th>Periphery Signal</th>
+              <th>ESP32-S3 Physical GPIO</th>
+              <th>Bus / Protocol</th>
+            </tr>
+          </thead>
+          <tbody>
+            {pinMappings.map((pin) => (
+              <tr>
+                <td class="font-medium text-primary">{pin.signal}</td>
+                <td class="font-mono text-xs text-cyan">{pin.gpio}</td>
+                <td class="font-mono text-xs text-dim">{pin.bus}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Syntax-Highlighted Firmware Snippet -->
+      <h2 class="font-display text-2xl" style="margin-bottom: 1rem; color: var(--text-primary);">
+        <span class="text-violet">4.</span> Firmware Architecture & Dual-Core Task Dispatch
+      </h2>
+      <p class="text-muted text-sm" style="margin-bottom: 1.25rem;">
+        Snippet from our open-source C++ firmware showing FreeRTOS core assignment and the quantized edge AI execution loop.
+      </p>
+
+      <div class="code-container" style="margin-bottom: 3rem;">
+        <div class="code-header flex items-center justify-between font-mono text-xs">
+          <span>firmware/src/main_robotics_core.cpp</span>
+          <span class="text-cyan">ESP-IDF / FreeRTOS</span>
+        </div>
+        <pre><code><span class="token-comment">// Elite Science Club (ESC) - ESP32-S3 Edge AI Robotics Core</span>
+<span class="token-keyword">#include</span> <span class="token-string">&lt;Arduino.h&gt;</span>
+<span class="token-keyword">#include</span> <span class="token-string">"esp_camera.h"</span>
+<span class="token-keyword">#include</span> <span class="token-string">"freertos/FreeRTOS.h"</span>
+<span class="token-keyword">#include</span> <span class="token-string">"freertos/task.h"</span>
+
+<span class="token-comment">// Task Handles for Dual-Core Execution</span>
+TaskHandle_t TaskPerceptionHandle = NULL;
+TaskHandle_t TaskKinematicsHandle = NULL;
+
+<span class="token-comment">// Core 0: High-Compute Vision Perception & TinyML Inference</span>
+<span class="token-keyword">void</span> <span class="token-function">PerceptionTask</span>(<span class="token-keyword">void</span> *pvParameters) &#123;
+    <span class="token-keyword">for</span>(;;) &#123;
+        camera_fb_t *fb = esp_camera_fb_get();
+        <span class="token-keyword">if</span> (!fb) &#123;
+            vTaskDelay(pdMS_TO_TICKS(10));
+            <span class="token-keyword">continue</span>;
+        &#125;
+        
+        <span class="token-comment">// Run INT8 quantized CNN obstacle classifier using ESP32-S3 Vector PIE instructions</span>
+        <span class="token-comment">// Output: Vector of detected path centroids</span>
+        esp_camera_fb_return(fb);
+        vTaskDelay(pdMS_TO_TICKS(33)); <span class="token-comment">// ~30 FPS loop</span>
+    &#125;
+&#125;
+
+<span class="token-comment">// Core 1: Deterministic Real-Time Kinematics & Motor Control</span>
+<span class="token-keyword">void</span> <span class="token-function">KinematicsTask</span>(<span class="token-keyword">void</span> *pvParameters) &#123;
+    <span class="token-keyword">for</span>(;;) &#123;
+        <span class="token-comment">// 100Hz PID wheel velocity closed-loop update</span>
+        <span class="token-comment">// Reads quadrature encoders and safety ultrasonic HC-SR04</span>
+        vTaskDelay(pdMS_TO_TICKS(10)); <span class="token-comment">// 100 Hz deterministic rate</span>
+    &#125;
+&#125;
+
+<span class="token-keyword">void</span> <span class="token-function">setup</span>() &#123;
+    Serial.begin(115200);
+    
+    <span class="token-comment">// Pin Perception Task to Core 0 (PRO_CPU)</span>
+    xTaskCreatePinnedToCore(
+        PerceptionTask, <span class="token-string">"TaskPerception"</span>, 8192, NULL, 2, &TaskPerceptionHandle, 0
+    );
+
+    <span class="token-comment">// Pin Kinematics Task to Core 1 (APP_CPU)</span>
+    xTaskCreatePinnedToCore(
+        KinematicsTask, <span class="token-string">"TaskKinematics"</span>, 4096, NULL, 3, &TaskKinematicsHandle, 1
+    );
+&#125;
+
+<span class="token-keyword">void</span> <span class="token-function">loop</span>() &#123;
+    vTaskDelete(NULL); <span class="token-comment">// Primary logic managed by FreeRTOS tasks</span>
+&#125;</code></pre>
+      </div>
+
+      <!-- Action Footer -->
+      <div class="card" style="text-align: center; padding: 2rem;">
+        <h3 class="font-display text-xl" style="margin-bottom: 0.5rem; color: var(--text-primary);">
+          Want to Reproduce This Build in Your School or Lab?
+        </h3>
+        <p class="text-muted text-sm" style="max-width: 55ch; margin-inline: auto; margin-bottom: 1.5rem; line-height: 1.6;">
+          We share all schematics and firmware freely under open-source licenses as part of our
+          <em>"Science For Service"</em> charter. Contact us for workshops or student guidance.
+        </p>
+        <div class="flex justify-center flex-wrap gap-md">
+          <a href="/contact/" class="btn btn-primary">
+            Request Robotics Workshop
+          </a>
+          <a href="/projects/" class="btn btn-outline">
+            ← Back to All Projects
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+</ShowcaseLayout>
+
+<style>
+  .breadcrumb-link {
+    transition: color var(--transition-fast);
+  }
+  .breadcrumb-link:hover {
+    color: var(--accent-cyan);
+  }
+
+  .tag-cyan {
+    border-color: var(--accent-cyan);
+    color: var(--accent-cyan);
+    background: var(--accent-cyan-muted);
+  }
+
+  .tag-sm {
+    font-size: 0.7rem;
+    padding: 0.15rem 0.5rem;
+    border-color: var(--accent-violet);
+    color: var(--accent-violet);
+    background: var(--accent-violet-muted);
+  }
+
+  .table-wrapper {
+    overflow-x: auto;
+    border-radius: var(--radius-lg);
+    border: 1px solid var(--showcase-border);
+  }
+
+  .bom-table {
+    width: 100%;
+    border-collapse: collapse;
+    background: var(--showcase-bg-elevated);
+    font-size: 0.875rem;
+  }
+
+  .bom-table th,
+  .bom-table td {
+    padding: 0.75rem 1rem;
+    border-bottom: 1px solid var(--showcase-border);
+    text-align: left;
+  }
+
+  .bom-table th {
+    background: var(--showcase-bg-card);
+    font-family: var(--font-display);
+    font-weight: 600;
+    color: var(--text-primary);
+  }
+
+  .bom-table tr:last-child td {
+    border-bottom: none;
+  }
+
+  .bom-table tr:hover td {
+    background: rgba(6, 182, 212, 0.04);
+  }
+
+  .code-container {
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    border: 1px solid var(--showcase-border);
+    background: #0B1120;
+  }
+
+  .code-header {
+    background: #111827;
+    padding: 0.65rem 1rem;
+    border-bottom: 1px solid var(--showcase-border);
+    color: var(--text-muted);
+  }
+
+  pre {
+    margin: 0;
+    padding: 1.25rem;
+    overflow-x: auto;
+    font-family: var(--font-mono);
+    font-size: 0.85rem;
+    line-height: 1.6;
+    color: #E2E8F0;
+  }
+
+  .token-comment { color: #64748B; font-style: italic; }
+  .token-keyword { color: #06B6D4; font-weight: 600; }
+  .token-string { color: #A7F3D0; }
+  .token-function { color: #FCD34D; }
+</style>

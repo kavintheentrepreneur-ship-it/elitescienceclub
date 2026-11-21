@@ -1,0 +1,162 @@
+---
+import ShowcaseLayout from '../../layouts/ShowcaseLayout.astro';
+
+const siteUrl = 'https://elitescienceclub.org';
+
+const breadcrumbLd = {
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  itemListElement: [
+    { '@type': 'ListItem', position: 1, name: 'Home', item: siteUrl },
+    { '@type': 'ListItem', position: 2, name: 'Projects', item: `${siteUrl}/projects/` },
+  ],
+};
+
+const collectionPageLd = {
+  '@context': 'https://schema.org',
+  '@type': 'CollectionPage',
+  '@id': `${siteUrl}/projects/#collection`,
+  name: 'Elite Science Club Hardware & Robotics Showcase',
+  description: 'Open-source hardware engineering, robotics, and embedded systems developed by high school students in Cuddalore, Tamil Nadu.',
+  url: `${siteUrl}/projects/`,
+  publisher: { '@id': `${siteUrl}/#organization` },
+};
+
+const projects = [
+  {
+    title: 'ESP32-S3 AI Edge Robotics Rover',
+    status: 'Flagship Build',
+    tag: 'Embedded AI / FreeRTOS',
+    description: 'An autonomous dual-core micro-rover leveraging the Xtensa LX7 ESP32-S3 with vector extensions, quantized CNN vision processing via OV2640, and real-time obstacle avoidance.',
+    detailHref: '/projects/esp32-s3-ai-robotics/',
+    specs: ['ESP32-S3 Dual-Core 240MHz', '8MB Octal PSRAM', 'OV2640 Camera', 'DRV8833 Motor Driver'],
+    isFeatured: true,
+  },
+  {
+    title: 'High-Altitude Atmospheric Telemetry Rig',
+    status: 'In Development',
+    tag: 'Aviation Physics / LoRa',
+    description: 'A miniature weather-balloon sensor payload logging pressure, humidity, and temperature gradients across tropospheric altitudes, transmitting continuous telemetry via 868MHz LoRa.',
+    specs: ['BMP280 Barometric Sensor', 'SX1276 LoRa Transceiver', 'MicroSD Blackbox', '3.7V LiPo with Solar Buffer'],
+    isFeatured: false,
+  },
+  {
+    title: 'Mini Semiconductor Physics Teaching Kit',
+    status: 'In Development',
+    tag: 'Solid-State / Education',
+    description: 'An interactive, visual demonstration rig showcasing p-n junction diode forward/reverse bias curves, bandgap voltage estimation via multi-color LEDs, and photovoltaic principles.',
+    specs: ['Arduino Nano / ADC 16-bit', 'Precision Constant-Current Source', 'OLED Real-Time I-V Curve Display'],
+    isFeatured: false,
+  },
+];
+---
+
+<ShowcaseLayout
+  title="Robotics & Hardware Showcase — Elite Science Club"
+  description="Explore student-engineered hardware builds from Cuddalore: ESP32-S3 edge AI robotics, atmospheric telemetry payloads, and open-source physics demonstration kits."
+  jsonLd={[breadcrumbLd, collectionPageLd]}
+>
+  <!-- Breadcrumb -->
+  <nav class="container" style="padding-top: 1.5rem;" aria-label="Breadcrumb">
+    <ol class="breadcrumb flex items-center gap-sm font-mono text-sm">
+      <li><a href="/" class="text-muted breadcrumb-link">Home</a></li>
+      <li class="text-dim" aria-hidden="true">/</li>
+      <li class="text-cyan" aria-current="page">Projects</li>
+    </ol>
+  </nav>
+
+  <!-- Hero -->
+  <section class="section" style="padding-bottom: 2rem;">
+    <div class="container" style="text-align: center;">
+      <p class="font-mono text-sm text-cyan" style="margin-bottom: 0.75rem;">⚙️ Open Hardware & Embedded Systems</p>
+      <h1 class="font-display" style="font-size: clamp(2rem, 5vw, 3rem); margin-bottom: 1rem;">
+        Robotics & Hardware <span class="text-cyan">Showcase</span>
+      </h1>
+      <p class="text-muted" style="max-width: 60ch; margin-inline: auto; font-size: 1.05rem; line-height: 1.7;">
+        Hands-on STEM engineering created by high-school students in Cuddalore. Every project
+        includes full system architectures, verified Bill of Materials (BOM), and reproducible schematics.
+      </p>
+    </div>
+  </section>
+
+  <!-- Project Grid -->
+  <section class="section" style="padding-top: 0;">
+    <div class="container">
+      <div class="grid grid-2">
+        {projects.map((proj) => (
+          <article class:list={['card project-card', { 'featured-project': proj.isFeatured }]}>
+            <div class="flex items-center justify-between" style="margin-bottom: 0.75rem;">
+              <span class="tag tag-cyan font-mono">{proj.tag}</span>
+              <span class="font-mono text-xs text-dim">{proj.status}</span>
+            </div>
+
+            <h2 class="font-display text-xl" style="color: var(--text-primary); margin-bottom: 0.75rem;">
+              {proj.title}
+            </h2>
+
+            <p class="text-muted text-sm" style="line-height: 1.7; margin-bottom: 1.25rem;">
+              {proj.description}
+            </p>
+
+            <div class="specs-grid" style="margin-bottom: 1.5rem;">
+              {proj.specs.map((spec) => (
+                <div class="spec-pill font-mono text-xs">
+                  {spec}
+                </div>
+              ))}
+            </div>
+
+            {proj.detailHref ? (
+              <a href={proj.detailHref} class="btn btn-primary" style="margin-top: auto;">
+                View Full Architecture & BOM →
+              </a>
+            ) : (\n              <div class="font-mono text-xs text-dim" style="margin-top: auto;">
+                🛠️ Hardware documentation coming soon
+              </div>
+            )}
+          </article>
+        ))}
+      </div>
+    </div>
+  </section>
+</ShowcaseLayout>
+
+<style>
+  .breadcrumb-link {
+    transition: color var(--transition-fast);
+  }
+  .breadcrumb-link:hover {
+    color: var(--accent-cyan);
+  }
+
+  .project-card {
+    display: flex;
+    flex-direction: column;
+    padding: 2rem;
+  }
+
+  .featured-project {
+    border-color: var(--accent-cyan);
+    box-shadow: var(--shadow-glow-cyan);
+  }
+
+  .tag-cyan {
+    border-color: var(--accent-cyan);
+    color: var(--accent-cyan);
+    background: var(--accent-cyan-muted);
+  }
+
+  .specs-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+
+  .spec-pill {
+    padding: 0.25rem 0.65rem;
+    border-radius: var(--radius);
+    background: var(--showcase-bg-elevated);
+    border: 1px solid var(--showcase-border);
+    color: var(--text-muted);
+  }
+</style>
