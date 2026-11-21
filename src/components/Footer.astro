@@ -1,0 +1,154 @@
+---
+export interface Props {
+  surface?: 'showcase' | 'reading';
+}
+
+const { surface = 'showcase' } = Astro.props;
+const isShowcase = surface === 'showcase';
+const year = new Date().getFullYear();
+---
+
+<footer class:list={['site-footer', { 'footer-reading': !isShowcase }]}>
+  <div class="container">
+    <div class="footer-grid">
+      <!-- Brand Column -->
+      <div class="footer-brand">
+        <div class="flex items-center gap-sm">
+          <span class="logo-icon" aria-hidden="true">⚛</span>
+          <div>
+            <strong class="font-display" style="font-size: 1.1rem;">Elite Science Club</strong>
+            <p class="footer-motto">Science For Service</p>
+          </div>
+        </div>
+        <p class="footer-desc">
+          Inspiring the next generation of scientists and engineers from Cuddalore, Tamil Nadu, India.
+        </p>
+      </div>
+
+      <!-- Quick Links -->
+      <div class="footer-section">
+        <h3 class="footer-heading font-display">Explore</h3>
+        <ul role="list">
+          <li><a href="/learn/">Learning Hub</a></li>
+          <li><a href="/projects/">Projects</a></li>
+          <li><a href="/media/">Media Archive</a></li>
+          <li><a href="/blog/">Blog (EN)</a></li>
+          <li><a href="/ta/blog/">Blog (தமிழ்)</a></li>
+        </ul>
+      </div>
+
+      <!-- Connect -->
+      <div class="footer-section">
+        <h3 class="footer-heading font-display">Connect</h3>
+        <ul role="list">
+          <li>
+            <a href="https://www.youtube.com/@EliteScienceClub" target="_blank" rel="noopener noreferrer">
+              YouTube @EliteScienceClub
+            </a>
+          </li>
+          <li><a href="/contact/">Contact & Collaborate</a></li>
+          <li><a href="/about/">About ESC</a></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="footer-bottom">
+      <p>&copy; {year} Elite Science Club, Cuddalore, Tamil Nadu. All rights reserved.</p>
+      <p class="footer-tagline font-mono text-xs">Built with ⚡ Astro · Engineered for performance</p>
+    </div>
+  </div>
+</footer>
+
+<style>
+  .site-footer {
+    padding: 3rem 0 1.5rem;
+    border-top: 1px solid var(--showcase-border);
+    background: var(--showcase-bg-elevated);
+    color: var(--text-muted);
+  }
+
+  .footer-reading {
+    background: var(--reading-bg-code);
+    border-top-color: var(--reading-border);
+    color: var(--reading-ink-muted);
+  }
+
+  .footer-reading .footer-heading {
+    color: var(--reading-ink);
+  }
+
+  .footer-reading a:hover {
+    color: var(--accent-cyan);
+  }
+
+  .footer-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 2rem;
+    margin-bottom: 2rem;
+  }
+
+  @media (min-width: 768px) {
+    .footer-grid {
+      grid-template-columns: 2fr 1fr 1fr;
+    }
+  }
+
+  .footer-brand .logo-icon {
+    font-size: 1.25rem;
+  }
+
+  .footer-motto {
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--accent-cyan);
+  }
+
+  .footer-desc {
+    margin-top: 0.75rem;
+    font-size: 0.875rem;
+    line-height: 1.6;
+    max-width: 32ch;
+  }
+
+  .footer-heading {
+    font-size: 0.8rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--text-primary);
+    margin-bottom: 0.75rem;
+  }
+
+  .footer-section ul {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+  }
+
+  .footer-section a {
+    font-size: 0.875rem;
+    transition: color var(--transition-fast);
+  }
+
+  .footer-section a:hover {
+    color: var(--accent-cyan);
+  }
+
+  .footer-bottom {
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--showcase-border);
+    text-align: center;
+    font-size: 0.8rem;
+  }
+
+  .footer-reading .footer-bottom {
+    border-top-color: var(--reading-border);
+  }
+
+  .footer-tagline {
+    margin-top: 0.25rem;
+    color: var(--text-dim);
+  }
+</style>

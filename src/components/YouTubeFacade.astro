@@ -1,0 +1,122 @@
+---
+export interface Props {
+  videoId: string;
+  title: string;
+  aspect?: '16:9' | '9:16';
+  poster?: string;
+}
+
+const { videoId, title, aspect = '16:9', poster } = Astro.props;
+const isShort = aspect === '9:16';
+const isPlaceholder = !videoId || videoId.includes('REPLACE');
+
+// High-resolution poster fallback for placeholders with SVG branding
+const placeholderPoster = isShort
+  ? `data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='405' height='720' viewBox='0 0 405 720'%3E%3Crect width='405' height='720' fill='%230B1120'/%3E%3Crect x='20' y='20' width='365' height='680' rx='16' fill='%23111827' stroke='%231E293B' stroke-width='2'/%3E%3Ccircle cx='202' cy='320' r='60' fill='%2306B6D4' opacity='0.15'/%3E%3Ctext x='202' y='325' text-anchor='middle' font-family='sans-serif' font-size='32' fill='%2306B6D4'%3E%E2%9A%9B%3C/text%3E%3Ctext x='202' y='410' text-anchor='middle' font-family='sans-serif' font-size='14' font-weight='bold' fill='%23F8FAFC'%3E%40EliteScienceClub%3C/text%3E%3Ctext x='202' y='435' text-anchor='middle' font-family='sans-serif' font-size='12' fill='%2306B6D4'%3E4K 2.5D SHORT%3C/text%3E%3C/svg%3E`
+  : `data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='720' height='405' viewBox='0 0 720 405'%3E%3Crect width='720' height='405' fill='%230B1120'/%3E%3Crect x='20' y='20' width='680' height='365' rx='12' fill='%23111827' stroke='%231E293B' stroke-width='2'/%3E%3Ccircle cx='360' cy='180' r='60' fill='%237C3AED' opacity='0.15'/%3E%3Ctext x='360' y='185' text-anchor='middle' font-family='sans-serif' font-size='32' fill='%237C3AED'%3E%E2%9A%9B%3C/text%3E%3Ctext x='360' y='240' text-anchor='middle' font-family='sans-serif' font-size='15' font-weight='bold' fill='%23F8FAFC'%3E%40EliteScienceClub%3C/text%3E%3Ctext x='360' y='265' text-anchor='middle' font-family='sans-serif' font-size='12' fill='%2306B6D4'%3ESCIENCE FOR SERVICE%3C/text%3E%3C/svg%3E`;
+
+const thumbnailUrl = poster || (isPlaceholder ? placeholderPoster : `https://img.youtube.com/vi/${videoId}/maxresdefault.jpg`);
+---
+
+<div
+  class:list={['yt-facade', { 'yt-facade--short': isShort }]}
+  data-video-id={videoId}
+  role="button"
+  tabindex="0"
+  aria-label={`Play video: ${title}`}
+>
+  <img
+    src={thumbnailUrl}
+    alt={`Thumbnail for: ${title}`}
+    loading="lazy"
+    width={isShort ? 405 : 720}
+    height={isShort ? 720 : 405}
+    class="yt-facade__thumb"
+  />
+  <div class="yt-facade__overlay">
+    <svg class="yt-facade__play" viewBox="0 0 68 48" width="68" height="48" aria-hidden="true">
+      <path d="M66.52 7.74c-.78-2.93-2.49-5.41-5.42-6.19C55.79.13 34 0 34 0S12.21.13 6.9 1.55C3.97 2.33 2.27 4.81 1.48 7.74.06 13.05 0 24 0 24s.06 10.95 1.48 16.26c.78 2.93 2.49 5.41 5.42 6.19C12.21 47.87 34 48 34 48s21.79-.13 27.1-1.55c2.93-.78 4.64-3.26 5.42-6.19C67.94 34.95 68 24 68 24s-.06-10.95-1.48-16.26z" fill="#212121" fill-opacity="0.85"/>
+      <path d="M45 24L27 14v20" fill="#fff"/>
+    </svg>
+  </div>
+</div>
+
+<script>
+  document.querySelectorAll('.yt-facade').forEach((facade) => {
+    const activate = () => {
+      const videoId = (facade as HTMLElement).dataset.videoId;
+      if (!videoId) return;
+      const iframe = document.createElement('iframe');
+      iframe.src = `https://www.youtube-nocookie.com/embed/${videoId}?autoplay=1&rel=0`;
+      iframe.allow = 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture';
+      iframe.allowFullscreen = true;
+      iframe.title = 'YouTube video player';
+      iframe.style.cssText = 'position:absolute;inset:0;width:100%;height:100%;border:0;';
+      facade.innerHTML = '';
+      (facade as HTMLElement).style.cursor = 'default';
+      facade.appendChild(iframe);
+    };
+    facade.addEventListener('click', activate);
+    facade.addEventListener('keydown', (e) => {
+      if ((e as KeyboardEvent).key === 'Enter' || (e as KeyboardEvent).key === ' ') {
+        e.preventDefault();
+        activate();
+      }
+    });
+  });
+</script>
+
+<style>
+  .yt-facade {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    cursor: pointer;
+    background: #0B1120;
+    border: 1px solid var(--showcase-border);
+  }
+
+  .yt-facade--short {
+    aspect-ratio: 9 / 16;
+    max-width: 320px;
+    margin-inline: auto;
+  }
+
+  .yt-facade__thumb {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.3s ease;
+  }
+
+  .yt-facade:hover .yt-facade__thumb {
+    transform: scale(1.02);
+  }
+
+  .yt-facade__overlay {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(11, 17, 32, 0.25);
+    transition: background 0.3s ease;
+  }
+
+  .yt-facade:hover .yt-facade__overlay {
+    background: rgba(11, 17, 32, 0.45);
+  }
+
+  .yt-facade__play {
+    filter: drop-shadow(0 4px 12px rgba(0, 0, 0, 0.7));
+    transition: transform 0.2s ease;
+  }
+
+  .yt-facade:hover .yt-facade__play {
+    transform: scale(1.1);
+  }
+</style>

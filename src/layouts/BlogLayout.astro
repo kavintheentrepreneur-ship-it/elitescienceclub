@@ -1,0 +1,102 @@
+---
+import '../styles/global.css';
+import SEOHead from '../components/SEOHead.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+
+export interface Props {
+  title: string;
+  description: string;
+  canonical?: string;
+  ogImage?: string;
+  ogType?: 'website' | 'article';
+  lang?: 'en' | 'ta';
+  hreflangAlternates?: { lang: string; href: string }[];
+  jsonLd?: Record<string, unknown> | Record<string, unknown>[];
+  pubDate?: string;
+  readingTime?: string;
+  tags?: string[];
+  category?: string;
+  translationHref?: string;
+}
+
+const {
+  title,
+  description,
+  canonical,
+  ogImage,
+  ogType = 'article',
+  lang = 'en',
+  hreflangAlternates,
+  jsonLd,
+  pubDate,
+  readingTime,
+  tags,
+  category,
+  translationHref,
+} = Astro.props;
+---
+
+<!DOCTYPE html>
+<html lang={lang}>
+  <head>
+    <SEOHead
+      title={title}
+      description={description}
+      canonical={canonical}
+      ogImage={ogImage}
+      ogType={ogType}
+      lang={lang}
+      hreflangAlternates={hreflangAlternates}
+      jsonLd={jsonLd}
+    />
+  </head>
+  <body class="surface-reading">
+    <a href="#main-content" class="skip-link">Skip to main content</a>
+    <Header lang={lang} surface="reading" translationHref={translationHref} />
+    <main id="main-content">
+      <!-- Article Meta Bar -->
+      {(pubDate || readingTime || category) && (
+        <div class="article-meta-bar">
+          <div class="reading-column flex flex-wrap items-center gap-md" style="padding-block: 1rem;">
+            {category && <span class="tag">{category}</span>}
+            {pubDate && (
+              <time datetime={pubDate} class="meta-item font-mono text-sm">
+                {new Date(pubDate).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}
+              </time>
+            )}
+            {readingTime && <span class="meta-item font-mono text-sm">📖 {readingTime}</span>}
+          </div>
+        </div>
+      )}
+
+      <!-- Article Content -->
+      <article class="reading-column prose">
+        <slot />
+      </article>
+
+      <!-- Tags -->
+      {tags && tags.length > 0 && (
+        <div class="reading-column" style="padding-block: 2rem;">
+          <div class="flex flex-wrap gap-sm">
+            {tags.map((tag) => (
+              <span class="tag">{tag}</span>
+            ))}
+          </div>
+        </div>
+      )}
+    </main>
+    <Footer surface="reading" />
+  </body>
+</html>
+
+<style>
+  .article-meta-bar {
+    border-bottom: 1px solid var(--reading-border);
+    background: var(--reading-bg-code);
+  }
+
+  .meta-item {
+    color: var(--reading-ink-dim);
+  }
+</style>

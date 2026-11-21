@@ -1,0 +1,106 @@
+---
+import ShowcaseLayout from '../layouts/ShowcaseLayout.astro';
+
+const breadcrumbLd = {
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  itemListElement: [
+    { '@type': 'ListItem', position: 1, name: 'Home', item: 'https://elitescienceclub.org/' },
+    { '@type': 'ListItem', position: 2, name: '404 Not Found', item: 'https://elitescienceclub.org/404/' },
+  ],
+};
+---
+
+<ShowcaseLayout
+  title="404 — Page Not Found | Elite Science Club"
+  description="The science experiment you are looking for has been moved or does not exist."
+  noindex={true}
+  jsonLd={[breadcrumbLd]}
+>
+  <section class="section" style="min-height: 70vh; display: flex; align-items: center;">
+    <div class="container" style="text-align: center; max-width: 650px;">
+      <div class="error-badge font-mono text-cyan" aria-hidden="true">⚛ 404</div>
+      <h1 class="font-display error-title" style="margin-bottom: 1rem;">
+        Quantum <span class="text-cyan">State Undefined</span>
+      </h1>
+      <p class="text-muted" style="font-size: 1.1rem; line-height: 1.7; margin-bottom: 2rem;">
+        The requested URL could not be resolved in this reference frame.
+        The page may have relocated or exists in an unobserved superposition.
+      </p>
+
+      <div class="card" style="padding: 2rem; margin-bottom: 2rem; text-align: left;">
+        <h2 class="font-display text-base text-primary" style="margin-bottom: 0.75rem;">
+          🧭 Recommended Navigation Coordinates:
+        </h2>
+        <ul class="flex flex-col gap-sm">
+          <li>
+            <a href="/" class="error-link flex items-center justify-between">
+              <span>🏠 Return to Homepage</span>
+              <span class="font-mono text-xs text-cyan">/ →</span>
+            </a>
+          </li>
+          <li>
+            <a href="/learn/" class="error-link flex items-center justify-between">
+              <span>📚 Science &amp; Engineering Learning Hub</span>
+              <span class="font-mono text-xs text-cyan">/learn/ →</span>
+            </a>
+          </li>
+          <li>
+            <a href="/projects/esp32-s3-ai-robotics/" class="error-link flex items-center justify-between">
+              <span>🤖 ESP32-S3 Edge AI Robotics Rover</span>
+              <span class="font-mono text-xs text-cyan">/projects/esp32-s3-ai-robotics/ →</span>
+            </a>
+          </li>
+          <li>
+            <a href="/media/" class="error-link flex items-center justify-between">
+              <span>🎬 4K Shorts &amp; Video Archive</span>
+              <span class="font-mono text-xs text-cyan">/media/ →</span>
+            </a>
+          </li>
+          <li>
+            <a href="/blog/" class="error-link flex items-center justify-between">
+              <span>📝 Technical Blog (English &amp; தமிழ்)</span>
+              <span class="font-mono text-xs text-cyan">/blog/ →</span>
+            </a>
+          </li>
+        </ul>
+      </div>
+
+      <a href="/" class="btn btn-primary">
+        Back to Safety (Home)
+      </a>
+    </div>
+  </section>
+</ShowcaseLayout>
+
+<style>
+  .error-badge {
+    font-size: clamp(2rem, 6vw, 3.5rem);
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+    letter-spacing: 0.05em;
+  }
+
+  .error-title {
+    font-size: clamp(2rem, 5vw, 2.75rem);
+    color: var(--text-primary);
+  }
+
+  .error-link {
+    padding: 0.6rem 0.85rem;
+    border-radius: var(--radius);
+    background: var(--showcase-bg-elevated);
+    border: 1px solid var(--showcase-border);
+    color: var(--text-muted);
+    font-size: 0.9rem;
+    transition: all var(--transition-fast);
+    text-decoration: none;
+  }
+
+  .error-link:hover {
+    color: var(--text-primary);
+    border-color: var(--accent-cyan);
+    background: var(--accent-cyan-muted);
+    transform: translateX(4px);
+  }
+</style>
