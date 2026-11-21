@@ -2,7 +2,7 @@
 import ShowcaseLayout from '../../layouts/ShowcaseLayout.astro';
 import { getCollection } from 'astro:content';
 
-const siteUrl = 'https://elitescienceclub.org';
+const siteUrl = 'https://elitescienceclub.pages.dev';
 
 const posts = (await getCollection('blog-en'))
   .sort((a, b) => b.data.pubDate.getTime() - a.data.pubDate.getTime());
@@ -60,7 +60,8 @@ const hreflangAlternates = [
       )}
 
       <div class="grid grid-2">
-        {posts.map((post) => (\n          <a href={`/blog/${post.id}/`} class="card post-card">
+        {posts.map((post) => (
+          <a href={`/blog/${post.id}/`} class="card post-card">
             <div class="flex items-center gap-sm" style="margin-bottom: 0.75rem;">
               <span class="tag">{post.data.category}</span>
               <time datetime={post.data.pubDate.toISOString()} class="font-mono text-xs text-dim">

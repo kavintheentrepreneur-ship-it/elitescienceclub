@@ -2,7 +2,7 @@
 import ShowcaseLayout from '../../../layouts/ShowcaseLayout.astro';
 import { getCollection } from 'astro:content';
 
-const siteUrl = 'https://elitescienceclub.org';
+const siteUrl = 'https://elitescienceclub.pages.dev';
 
 const posts = (await getCollection('blog-ta'))
   .sort((a, b) => b.data.pubDate.getTime() - a.data.pubDate.getTime());

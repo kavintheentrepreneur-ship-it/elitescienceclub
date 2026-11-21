@@ -2,7 +2,7 @@
 import ShowcaseLayout from '../../layouts/ShowcaseLayout.astro';
 import YouTubeFacade from '../../components/YouTubeFacade.astro';
 
-const siteUrl = 'https://elitescienceclub.org';
+const siteUrl = 'https://elitescienceclub.pages.dev';
 const pageUrl = `${siteUrl}/projects/esp32-s3-ai-robotics/`;
 
 const breadcrumbLd = {
@@ -187,7 +187,7 @@ const pinMappings = [
   <!-- System Architecture Section -->
   <section class="section" style="padding-top: 0;">
     <div class="container">
-      <h2 class="font-display text-2xl" style="margin-bottom: 1.5rem; color: var(--text-primary);准>
+      <h2 class="font-display text-2xl" style="margin-bottom: 1.5rem; color: var(--text-primary);">
         <span class="text-cyan">1.</span> System Architecture Breakdown
       </h2>
 
@@ -337,8 +337,7 @@ TaskHandle_t TaskKinematicsHandle = NULL;
         
         <span class="token-comment">// Run INT8 quantized CNN obstacle classifier using ESP32-S3 Vector PIE instructions</span>
         <span class="token-comment">// Output: Vector of detected path centroids</span>
-        esp_camera_fb_return(fb);
-        vTaskDelay(pdMS_TO_TICKS(33)); <span class="token-comment">// ~30 FPS loop</span>
+        esp_camera_fb_return(fb);\n        vTaskDelay(pdMS_TO_TICKS(33)); <span class="token-comment">// ~30 FPS loop</span>
     &#125;
 &#125;
 
@@ -352,8 +351,7 @@ TaskHandle_t TaskKinematicsHandle = NULL;
 &#125;
 
 <span class="token-keyword">void</span> <span class="token-function">setup</span>() &#123;
-    Serial.begin(115200);
-    
+    Serial.begin(115200);\n    
     <span class="token-comment">// Pin Perception Task to Core 0 (PRO_CPU)</span>
     xTaskCreatePinnedToCore(
         PerceptionTask, <span class="token-string">"TaskPerception"</span>, 8192, NULL, 2, &TaskPerceptionHandle, 0

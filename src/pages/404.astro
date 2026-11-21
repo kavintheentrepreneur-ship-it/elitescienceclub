@@ -5,8 +5,8 @@ const breadcrumbLd = {
   '@context': 'https://schema.org',
   '@type': 'BreadcrumbList',
   itemListElement: [
-    { '@type': 'ListItem', position: 1, name: 'Home', item: 'https://elitescienceclub.org/' },
-    { '@type': 'ListItem', position: 2, name: '404 Not Found', item: 'https://elitescienceclub.org/404/' },
+    { '@type': 'ListItem', position: 1, name: 'Home', item: 'https://elitescienceclub.pages.dev/' },
+    { '@type': 'ListItem', position: 2, name: '404 Not Found', item: 'https://elitescienceclub.pages.dev/404/' },
   ],
 };
 ---
@@ -75,32 +75,4 @@ const breadcrumbLd = {
 
 <style>
   .error-badge {
-    font-size: clamp(2rem, 6vw, 3.5rem);
-    font-weight: 700;
-    margin-bottom: 0.5rem;
-    letter-spacing: 0.05em;
-  }
-
-  .error-title {
-    font-size: clamp(2rem, 5vw, 2.75rem);
-    color: var(--text-primary);
-  }
-
-  .error-link {
-    padding: 0.6rem 0.85rem;
-    border-radius: var(--radius);
-    background: var(--showcase-bg-elevated);
-    border: 1px solid var(--showcase-border);
-    color: var(--text-muted);
-    font-size: 0.9rem;
-    transition: all var(--transition-fast);
-    text-decoration: none;
-  }
-
-  .error-link:hover {
-    color: var(--text-primary);
-    border-color: var(--accent-cyan);
-    background: var(--accent-cyan-muted);
-    transform: translateX(4px);
-  }
-</style>
+    font-size: clamp(2rem, 6vw, 3.5rem);\n    font-weight: 700;\n    margin-bottom: 0.5rem;\n    letter-spacing: 0.05em;\n  }\n\n  .error-title {\n    font-size: clamp(2rem, 5vw, 2.75rem);\n    color: var(--text-primary);\n  }\n\n  .error-link {\n    padding: 0.6rem 0.85rem;\n    border-radius: var(--radius);\n    background: var(--showcase-bg-elevated);\n    border: 1px solid var(--showcase-border);\n    color: var(--text-muted);\n    font-size: 0.9rem;\n    transition: all var(--transition-fast);\n    text-decoration: none;\n  }\n\n  .error-link:hover {\n    color: var(--text-primary);\n    border-color: var(--accent-cyan);\n    background: var(--accent-cyan-muted);\n    transform: translateX(4px);\n  }\n</style>\n
